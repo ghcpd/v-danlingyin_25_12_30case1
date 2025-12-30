@@ -1,0 +1,34 @@
+[
+  {
+    "file": "README.md",
+    "section": "API Reference",
+    "missingInfo": "Documentation for RetryOptions interface, including description of retryCount property.",
+    "whyRequired": "Developers need to know how to configure the retry count when creating a RetryClient instance.",
+    "codeCitation": "input.ts lines 1-3",
+    "severity": "High"
+  },
+  {
+    "file": "README.md",
+    "section": "API Reference",
+    "missingInfo": "Detailed documentation for RetryClient constructor, including parameters, default values, and validation behavior.",
+    "whyRequired": "To use the constructor safely, developers must know the default retry count, parameter structure, and that it throws an error for invalid retryCount values.",
+    "codeCitation": "input.ts lines 7-15",
+    "severity": "High"
+  },
+  {
+    "file": "README.md",
+    "section": "API Reference",
+    "missingInfo": "Detailed documentation for run method, including parameter description, return value, retry behavior, and error handling.",
+    "whyRequired": "Developers need to understand how retries work, what the method expects as input, what it returns, and when it throws errors.",
+    "codeCitation": "input.ts lines 17-32",
+    "severity": "Medium"
+  },
+  {
+    "file": "README.md",
+    "section": "Usage",
+    "missingInfo": "Usage example showing how to pass options to the constructor.",
+    "whyRequired": "To demonstrate configuration of retry count, as the basic example does not show optional parameters.",
+    "codeCitation": "input.ts lines 7-15",
+    "severity": "Low"
+  }
+]

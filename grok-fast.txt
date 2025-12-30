@@ -1,0 +1,77 @@
+grok-fast：：
+User: prompt
+You are a senior software engineer and technical documentation reviewer.
+Your task is to evaluate whether the provided documentation is complete enough for developers to correctly use the APIs and components defined in the source code.
+--------------------------------------------------------------------------------
+Your Responsibilities
+1.Identify incomplete documentation
+- Review all documentation files
+- Identify missing or insufficient information, such as:
+- Missing parameter descriptions
+- Missing return value documentation
+- Missing error conditions
+- Missing usage examples
+- Missing required configuration steps
+2.Compare against source code
+- Inspect function and class definitions
+- Identify undocumented but required behaviors
+3.For each issue, report:
+- Documentation file
+- Section
+- Missing information
+- Why it is required (based on code)
+- Code citation (file + line numbers)
+--------------------------------------------------------------------------------
+4.Classify severity
+- High: API cannot be safely used without guessing
+- Medium: Usage possible but unclear
+- Low: Minor missing clarity
+--------------------------------------------------------------------------------
+5.Produce improved documentation Generate:
+- README_backup.md
+- README.md (with missing info added)
+Rules:
+- Do NOT change code
+- Do NOT invent behavior not present in code
+--------------------------------------------------------------------------------
+6.Generate report.json (similar structure as other doc audits)
+--------------------------------------------------------------------------------
+📌 Rules
+- MUST prove incompleteness using code references
+- MUST NOT assume user intent
+
+GitHub Copilot: Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1230/case1/grok-fast/README.md)
+
+Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1230/case1/grok-fast/input.ts#1-1), lines 1 to 25
+
+Read [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1230/case1/grok-fast/input.ts#26-26), lines 26 to 35
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1230/case1/grok-fast/README_backup.md)
+
+Using "Replace String in File"
+
+
+```
+
+```
+
+
+Created [](file:///c%3A/Users/v-danlingyin/Documents/microsoft_projects_files/bugBash/1230/case1/grok-fast/report.json)
+
+I've completed the evaluation of the documentation against the source code in input.ts. Here's a summary:
+
+## Issues Identified
+The current README.md lacks critical API details, making it incomplete for safe and correct usage. Key gaps include:
+- No documentation for the `RetryOptions` interface.
+- Missing constructor details (parameters, defaults, validation).
+- Insufficient `run` method documentation (parameters, behavior, errors).
+- Basic usage example doesn't demonstrate configuration options.
+
+## Files Generated
+- README_backup.md: Exact copy of the original documentation.
+- README.md: Improved version with added API reference section, detailed descriptions, and an enhanced usage example.
+- report.json: Structured report of all identified issues, including severity classifications.
+
+All improvements are based directly on the source code behavior—no assumptions or inventions were made. The documentation now provides complete information for developers to use the APIs safely.
+
+Made changes.
