@@ -1,0 +1,67 @@
+{
+  "summary": "Documentation audit for RetryClient — README.md was incomplete. Added explicit API reference, behavior, error conditions and examples. Backup of original README created.",
+  "issues": [
+    {
+      "documentationFile": "README.md",
+      "section": "API / RetryOptions.retryCount",
+      "missingInformation": "No description of `retryCount` (type, default value, allowed range).",
+      "whyRequired": "Users need to know the default number of attempts and valid values to choose appropriate retry behavior and avoid constructor errors.",
+      "codeCitation": "input.ts: lines 2-4 (type) and lines 9-16 (default & range validation)",
+      "severity": "High",
+      "recommendation": "Document `retryCount` type, default (3), and allowed range (1-5); show example using a custom value."
+    },
+    {
+      "documentationFile": "README.md",
+      "section": "Constructor behavior / errors",
+      "missingInformation": "Documentation does not state that the constructor throws when `retryCount` is outside the range 1..5.",
+      "whyRequired": "Callers must know the constructor can throw so they can validate input or catch the error at construction time.",
+      "codeCitation": "input.ts: lines 12-14 (throw if out of range)",
+      "severity": "High",
+      "recommendation": "Add explicit note that constructor will throw for invalid `retryCount` values."
+    },
+    {
+      "documentationFile": "README.md",
+      "section": "run(task) — parameter & return behavior",
+      "missingInformation": "Missing type/signature and semantics for `task` (that it must return `Promise<void>`), and that `run` returns `Promise<void>` resolving on success.",
+      "whyRequired": "Developers need correct function signature and knowledge of how/when the returned promise resolves or rejects to correctly integrate the API.",
+      "codeCitation": "input.ts: lines 19 and 24 (method signature and await task())",
+      "severity": "High",
+      "recommendation": "Document the expected `task` signature and that `run` resolves when `task` succeeds and rejects with the last task error after retries are exhausted."
+    },
+    {
+      "documentationFile": "README.md",
+      "section": "Retry semantics & timing",
+      "missingInformation": "No mention that retries occur immediately with no delay/backoff, and exactly how attempts are counted.",
+      "whyRequired": "Knowing if there is a delay/backoff affects how callers implement transient-failure handling and whether they should add delays themselves.",
+      "codeCitation": "input.ts: lines 20-26 and 27-31 (attempts counter and immediate loop)",
+      "severity": "Medium",
+      "recommendation": "State that there is no built-in delay/backoff and clarify attempt counting (up to `retryCount` attempts)."
+    },
+    {
+      "documentationFile": "README.md",
+      "section": "Usage examples / error handling",
+      "missingInformation": "No example showing custom `retryCount` or how to catch the error after retries are exhausted.",
+      "whyRequired": "Practical examples lower risk of misuse and demonstrate correct error-handling patterns.",
+      "codeCitation": "input.ts: lines 22-31 (retry loop and rethrow)",
+      "severity": "Medium",
+      "recommendation": "Add examples for custom retry counts and handling the final thrown error."
+    },
+    {
+      "documentationFile": "README.md",
+      "section": "Return values / task results",
+      "missingInformation": "No statement that `run` returns `Promise<void>` and does not propagate a task return value.",
+      "whyRequired": "Callers must know the API does not return a task result and cannot be used to obtain values from the task.",
+      "codeCitation": "input.ts: line 19 (Promise<void> signature)",
+      "severity": "Low",
+      "recommendation": "Document that `run` returns `Promise<void>` and the task should handle any results itself."
+    }
+  ],
+  "filesChanged": [
+    "README.md (updated)",
+    "README_backup.md (original content saved)"
+  ],
+  "nextSteps": [
+    "Review the updated README.md to confirm wording/coverage.",
+    "If desired, add examples showing adding delays/backoff in user code (the library intentionally does not implement backoff)."
+  ]
+}
