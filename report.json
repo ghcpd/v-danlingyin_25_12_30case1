@@ -1,0 +1,129 @@
+{
+  "audit_type": "Documentation Completeness Review",
+  "timestamp": "2025-12-30",
+  "workspace": "Claude-haiku-4.5",
+  "files_reviewed": ["README.md", "input.ts"],
+  "summary": {
+    "total_issues": 6,
+    "high_severity": 3,
+    "medium_severity": 3,
+    "low_severity": 0
+  },
+  "issues": [
+    {
+      "id": "DOC-001",
+      "severity": "HIGH",
+      "title": "Missing retryCount Validation Constraints Documentation",
+      "documentation_file": "README.md",
+      "section": "Usage",
+      "missing_information": "No documentation of retryCount parameter constraints (must be between 1 and 5, inclusive)",
+      "why_required": "Source code enforces validation: if (count < 1 || count > 5) { throw new Error(...) }. Developers must know these constraints to avoid errors.",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "11-13",
+        "snippet": "if (count < 1 || count > 5) {\n      throw new Error(\"retryCount must be between 1 and 5\");\n    }"
+      },
+      "impact": "API cannot be safely used without code inspection. Developers may pass invalid values."
+    },
+    {
+      "id": "DOC-002",
+      "severity": "HIGH",
+      "title": "Missing Error Condition Documentation",
+      "documentation_file": "README.md",
+      "section": "Entire documentation",
+      "missing_information": "No documentation of error scenarios: (1) constructor throws on invalid retryCount, (2) run() throws on exhausted retries",
+      "why_required": "Source code throws errors in two scenarios: constructor validation failure and task execution failure after retries. Developers must understand these error conditions.",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "11-13, 27-28",
+        "snippet": "Constructor: if (count < 1 || count > 5) { throw new Error(...) }\nrun(): if (attempts >= this.retryCount) { throw err; }"
+      },
+      "impact": "HIGH - Developers cannot handle errors properly without understanding when they occur."
+    },
+    {
+      "id": "DOC-003",
+      "severity": "HIGH",
+      "title": "Missing Default retryCount Value Documentation",
+      "documentation_file": "README.md",
+      "section": "Usage",
+      "missing_information": "No mention of default retryCount value (3). Developers don't know behavior when no options provided.",
+      "why_required": "Source code assigns default value 3: const count = options.retryCount ?? 3. Critical for understanding default behavior.",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "8",
+        "snippet": "const count = options.retryCount ?? 3;"
+      },
+      "impact": "HIGH - Developers cannot predict retry behavior without guessing or code inspection."
+    },
+    {
+      "id": "DOC-004",
+      "severity": "MEDIUM",
+      "title": "Missing Retry Logic Documentation",
+      "documentation_file": "README.md",
+      "section": "Description",
+      "missing_information": "No explanation of how retry mechanism works: which errors trigger retries, when execution succeeds/stops, retry flow",
+      "why_required": "Source code shows specific retry behavior: (1) retries on any error, (2) stops on success, (3) throws only after all attempts exhausted",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "18-28",
+        "snippet": "while (attempts < this.retryCount) {\n      try {\n        await task();\n        return;  // Success path\n      } catch (err) {\n        attempts++;\n        if (attempts >= this.retryCount) {\n          throw err;  // Final failure\n        }\n      }\n    }"
+      },
+      "impact": "MEDIUM - Developers can use the API but may misunderstand retry behavior and error handling."
+    },
+    {
+      "id": "DOC-005",
+      "severity": "MEDIUM",
+      "title": "Missing Task Function Signature Documentation",
+      "documentation_file": "README.md",
+      "section": "Usage",
+      "missing_information": "No documentation of task function signature requirements: must be () => Promise<void>",
+      "why_required": "Source code expects specific function signature: async run(task: () => Promise<void>). Developers must know this to call correctly.",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "17",
+        "snippet": "async run(task: () => Promise<void>): Promise<void>"
+      },
+      "impact": "MEDIUM - Developers may pass functions with incorrect signatures."
+    },
+    {
+      "id": "DOC-006",
+      "severity": "MEDIUM",
+      "title": "Missing Configuration Example",
+      "documentation_file": "README.md",
+      "section": "Usage",
+      "missing_information": "No example showing how to configure retryCount parameter with RetryOptions",
+      "why_required": "Source code supports optional configuration: constructor(options: RetryOptions = {}). Developers need example of how to use this.",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "7-8",
+        "snippet": "constructor(options: RetryOptions = {}) {\n    const count = options.retryCount ?? 3;"
+      },
+      "impact": "MEDIUM - Developers don't know how to customize retry behavior."
+    }
+  ],
+  "improvements_made": {
+    "documentation_file": "README.md",
+    "changes": [
+      "Added API Reference section with parameter documentation table",
+      "Documented retryCount constraints (1-5) with error behavior",
+      "Added default value documentation (3 retries)",
+      "Documented all error conditions with examples",
+      "Added explanation of retry logic and execution flow",
+      "Documented task function signature requirements",
+      "Added multiple usage examples including error handling",
+      "Structured documentation with clear sections"
+    ]
+  },
+  "files_generated": [
+    "README_backup.md (original version preserved)",
+    "README.md (improved version with complete documentation)",
+    "report.json (this audit report)"
+  ],
+  "compliance_notes": [
+    "All documentation changes based on source code analysis",
+    "No code modifications made",
+    "No invented behavior - all descriptions derived from input.ts",
+    "All issues include code citations with line numbers",
+    "Severity classifications based on impact to API usability"
+  ]
+}
