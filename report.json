@@ -1,0 +1,53 @@
+{
+  "summary": "Documentation audit of README.md vs source (input.ts)",
+  "issues": [
+    {
+      "documentation_file": "README.md",
+      "section": "API / RetryOptions",
+      "missing_information": "Default value and allowed range for `retryCount` (and that the constructor throws if out-of-range).",
+      "why_required": "The constructor sets a default (3) and validates `retryCount` to be between 1 and 5, throwing if not; without this, users cannot safely configure retries.",
+      "code_citation": "input.ts lines 8-15: `const count = options.retryCount ?? 3;` and `if (count < 1 || count > 5) { throw new Error(\"retryCount must be between 1 and 5\"); }`",
+      "severity": "High"
+    },
+    {
+      "documentation_file": "README.md",
+      "section": "API / run",
+      "missing_information": "The required `task` signature and exact retry behavior: that `run` attempts the task up to `retryCount` times, returns on first success, and re-throws the last error after final failure.",
+      "why_required": "Users need to know how many attempts to expect, how errors are surfaced, and how to handle them. The code implements a loop and re-throws the last error.",
+      "code_citation": "input.ts lines 18-29: `async run(task: () => Promise<void>): Promise<void> { ... await task(); ... throw err; }`",
+      "severity": "High"
+    },
+    {
+      "documentation_file": "README.md",
+      "section": "Usage / Examples",
+      "missing_information": "Examples showing custom `retryCount` usage and showing how to catch the final error after retries.",
+      "why_required": "Practical examples reduce misuse and demonstrate correct error handling (the code throws after final attempt, see lines 26-29).",
+      "code_citation": "input.ts lines 26-29: `attempts++; if (attempts >= this.retryCount) { throw err; }`",
+      "severity": "Medium"
+    },
+    {
+      "documentation_file": "README.md",
+      "section": "Behavior details",
+      "missing_information": "Clarify that synchronous throws from the `task` function are treated the same as rejected promises (i.e., counted as a failed attempt).",
+      "why_required": "The implementation uses `await task()` inside try/catch so both thrown and rejected errors are caught and retried; documenting this prevents surprises.",
+      "code_citation": "input.ts lines 22-26: `try { await task(); } catch (err) { attempts++; ... }`",
+      "severity": "Medium"
+    },
+    {
+      "documentation_file": "README.md",
+      "section": "Installation / Import",
+      "missing_information": "Minimal import guidance and note that the module is TypeScript with type signatures (where to import from in local usage).",
+      "why_required": "Users need to know how to import the class into their codebase; the repository exposes `RetryClient` in `input.ts` (see file).",
+      "code_citation": "input.ts top-level exports: `export class RetryClient` and `export interface RetryOptions` (lines 1-6, 5-6).",
+      "severity": "Low"
+    },
+    {
+      "documentation_file": "README.md",
+      "section": "API / RetryOptions",
+      "missing_information": "Whether `retryCount` must be an integer (the code does not enforce integer-ness).",
+      "why_required": "The code compares numeric bounds but does not coerce or enforce integers; documentation should state recommended usage (use integer) and note implementation does not validate integer-ness.",
+      "code_citation": "input.ts lines 8-15 (validation logic does not check for integer): `if (count < 1 || count > 5) ...`",
+      "severity": "Low"
+    }
+  ]
+}
