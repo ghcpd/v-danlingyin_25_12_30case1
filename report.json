@@ -1,0 +1,85 @@
+{
+  "summary": "Documentation audit for RetryClient (source: input.ts). README.md is minimal and omits important API, error, and example details required for safe use.",
+  "filesReviewed": ["README.md", "input.ts"],
+  "issues": [
+    {
+      "id": 1,
+      "file": "README.md",
+      "section": "Usage / API",
+      "missing": "Description of RetryOptions.retryCount: default value, allowed range (1..5), and constructor validation behavior (throws on out-of-range).",
+      "why_required": "Developers need to know the default behavior and valid values to avoid runtime exceptions and to configure retries correctly.",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "8-16",
+        "excerpt": "const count = options.retryCount ?? 3;\n\nif (count < 1 || count > 5) {\n  throw new Error(\"retryCount must be between 1 and 5\");\n}\n\nthis.retryCount = count;"
+      },
+      "severity": "High",
+      "recommendation": "Document the default (3), allowed range (1..5), and the error thrown when out of range. Add an example showing valid and invalid values."
+    },
+    {
+      "id": 2,
+      "file": "README.md",
+      "section": "run() method",
+      "missing": "Parameter and return-value documentation: signature of `task` (must return `Promise<void>`), what `run` resolves to, and that it rethrows the last error after exhausting attempts.",
+      "why_required": "Callers must know the required task signature, what to await for, and whether/when to catch errors (so they can write correct try/catch logic).",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "18-31",
+        "excerpt": "async run(task: () => Promise<void>): Promise<void> {\n  let attempts = 0;\n\n  while (attempts < this.retryCount) {\n    try {\n      await task();\n      return;\n    } catch (err) {\n      attempts++;\n      if (attempts >= this.retryCount) {\n        throw err;\n      }\n    }\n  }\n}"
+      },
+      "severity": "High",
+      "recommendation": "Add explicit parameter/return docs, describe retry semantics (stop on first success, rethrow last error), and provide code examples showing success and error handling."
+    },
+    {
+      "id": 3,
+      "file": "README.md",
+      "section": "Examples",
+      "missing": "Examples for common scenarios: custom `retryCount`, catching errors after retries, and demonstrating the constructor validation error.",
+      "why_required": "Examples reduce misuse — e.g., users won't know to catch `run` rethrows or that constructor may throw for bad config without examples.",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "11-13, 26-28",
+        "excerpt": "if (count < 1 || count > 5) { throw new Error(\"retryCount must be between 1 and 5\"); } ... if (attempts >= this.retryCount) { throw err; }"
+      },
+      "severity": "Medium",
+      "recommendation": "Add 2–3 small, copy-pasteable examples: (1) set `retryCount`, (2) show try/catch around `run`, (3) show invalid `retryCount` throwing."
+    },
+    {
+      "id": 4,
+      "file": "README.md",
+      "section": "Behavior / limitations",
+      "missing": "Explicit notes about limitations: task must be `Promise<void>`, no result/value is returned, no backoff/delay/cancellation support.",
+      "why_required": "Prevents incorrect assumptions (for example expecting a returned value or automatic delay between retries).",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "18-24",
+        "excerpt": "async run(task: () => Promise<void>): Promise<void> { ... await task(); return; }"
+      },
+      "severity": "Low",
+      "recommendation": "Add a short "limitations" paragraph describing these constraints and suggested extensions (backoff, cancellation) that are not implemented."
+    },
+    {
+      "id": 5,
+      "file": "README.md",
+      "section": "Repository / tests",
+      "missing": "No guidance about tests or development (no example unit tests or commands).",
+      "why_required": "Consumers/contributors should be able to validate behavior and add tests for edge-cases (constructor validation, retry semantics).",
+      "code_citation": {
+        "file": "input.ts",
+        "lines": "1-33",
+        "excerpt": "(entire file defines the public surface and behaviours that should be covered by tests)"
+      },
+      "severity": "Low",
+      "recommendation": "Add suggested unit tests and a short `Contributing` or `Tests` section in README."
+    }
+  ],
+  "actions_taken": {
+    "created": ["README_backup.md", "report.json"],
+    "updated": ["README.md"]
+  },
+  "recommended_next_steps": [
+    "Add unit tests that assert default and custom retry behaviors and that `run` rethrows the last error.",
+    "Consider documenting or implementing optional features (delay/backoff, return values, cancellation).",
+    "Publish the expanded README and add examples to the project's documentation site or repo root."
+  ]
+}
